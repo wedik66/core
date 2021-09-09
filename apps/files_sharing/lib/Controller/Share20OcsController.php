@@ -385,12 +385,12 @@ class Share20OcsController extends OCSController {
 		}
 
 		$shareType = (int)$this->request->getParam('shareType', '-1');
-		$defaultPermissionsUsed = false;
+		$noPermissionFromRequest = false;
 
 		// Parse permissions (if available)
 		$permissions = $this->getPermissionsFromRequest();
 		if ($permissions === null) {
-			$defaultPermissionsUsed = true;
+			$noPermissionFromRequest = true;
 			if ($shareType !== Share::SHARE_TYPE_LINK) {
 				$permissions = $this->config->getAppValue('core', 'shareapi_default_permissions', Constants::PERMISSION_ALL);
 			} else {
@@ -495,8 +495,10 @@ class Share20OcsController extends OCSController {
 			}
 
 			// don't allow "create"-permission if public upload is not allowed.
-			// we only need this check if we're not dealing with the default permissions.
-			if (!$defaultPermissionsUsed && !$publicUploadAllowed && $permissions & Constants::PERMISSION_CREATE) {
+			// we only need this check if permissions were passed via the request, otherwise
+			// it is already being handled.
+			$includesCreatePermission = $permissions & Constants::PERMISSION_CREATE;
+			if (!$noPermissionFromRequest && !$publicUploadAllowed && $includesCreatePermission) {
 				$share->getNode()->unlock(ILockingProvider::LOCK_SHARED);
 				return new Result(null, 403, $this->l->t('Public upload disabled by the administrator'));
 			}
@@ -885,9 +887,8 @@ class Share20OcsController extends OCSController {
 			}
 
 			// create (upload)
-			if (
-				$newPermissions & Constants::PERMISSION_CREATE
-			) {
+			$includesCreatePermission = $newPermissions & Constants::PERMISSION_CREATE;
+			if ($includesCreatePermission) {
 				if (!$this->shareManager->shareApiLinkAllowPublicUpload()) {
 					$share->getNode()->unlock(ILockingProvider::LOCK_SHARED);
 					return new Result(null, 403, $this->l->t('Public upload disabled by the administrator'));
