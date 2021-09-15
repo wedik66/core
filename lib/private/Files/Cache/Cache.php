@@ -341,6 +341,9 @@ class Cache implements ICache {
 				if ($value === '') {
 					$data[$param] = null;
 				}
+				if ($value === null && \in_array($param, ['mtime', 'storage_mtime'], true)) {
+					$data[$param] = 0;
+				}
 			}
 		}
 
@@ -411,7 +414,7 @@ class Cache implements ICache {
 		$params = [];
 		$queryParts = [];
 		foreach ($data as $name => $value) {
-			if (\array_search($name, $fields) !== false) {
+			if (\in_array($name, $fields, true)) {
 				if ($name === 'path') {
 					$params[] = \md5($value);
 					$queryParts[] = '`path_hash`';
