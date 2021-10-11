@@ -335,7 +335,6 @@ Feature: create a public link share
       | permissions | read,create |
     Then the OCS status code should be "<ocs_status_code>"
 
-    @notToImplementOnOCIS @issue-ocis-2079 @issue-ocis-reva-41
     Examples:
       | ocs_api_version | ocs_status_code |
       | 1               | 403             |
