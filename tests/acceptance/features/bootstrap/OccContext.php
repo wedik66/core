@@ -3247,6 +3247,66 @@ class OccContext implements Context {
 	}
 
 	/**
+	 * @Given the administrator has changed the database type to :dbType
+	 *
+	 * @param string $dbType
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function theAdministratorHasChangedTheDatabaseType(string $dbType): void {
+		$this->theAdministratorChangesTheDatabaseType($dbType);
+		$exitStatusCode = $this->featureContext->getExitStatusCodeOfOccCommand();
+
+		if ($exitStatusCode !== 0) {
+			$exceptions = $this->featureContext->findExceptions();
+			$commandErr = $this->featureContext->getStdErrOfOccCommand();
+			$sameTypeError = "Can not convert from $dbType to $dbType.";
+			$lines = SetupHelper::findLines(
+				$commandErr,
+				$sameTypeError
+			);
+			// pass if the same type error is found
+			if (\count($lines) === 0) {
+				$msg = "The command was not successful, exit code was " .
+					$exitStatusCode . ".\n" .
+					"stdOut was: '" .
+					$this->featureContext->getStdOutOfOccCommand() . "'\n" .
+					"stdErr was: '$commandErr'\n";
+				if (!empty($exceptions)) {
+					$msg .= ' Exceptions: ' . \implode(', ', $exceptions);
+				}
+				throw new Exception($msg);
+			}
+		}
+	}
+
+	/**
+	 * @When the administrator changes the database type to :dbType
+	 * @When the administrator tries to change the database type to :dbType
+	 *
+	 * @param string $dbType
+	 *
+	 * @return void
+	 */
+	public function theAdministratorChangesTheDatabaseType(string $dbType): void {
+		$dbUser = "owncloud";
+		$dbHost = $dbType;
+		$dbName = "owncloud";
+		$dbPass = "owncloud";
+
+		if ($dbType === "postgres") {
+			$dbType = "pgsql";
+		}
+		if ($dbType === "oracle") {
+			$dbUser = "autotest";
+			$dbType = "oci";
+		}
+
+		$this->invokingTheCommand("db:convert-type --password=$dbPass $dbType $dbUser $dbHost $dbName");
+	}
+
+	/**
 	 * This will run after EVERY scenario.
 	 * It will set the properties for this object.
 	 *
