@@ -109,7 +109,7 @@ class MetaversionTests extends TestCase {
 		$mockConfigValue = $config->getSystemValue($constant, false);
 		$this->assertTrue($mockConfigValue);
 
-    // test file creation and versioning for initial file creation
+		// test file creation and versioning for initial file creation
 //		$initialContents = 'v1';
 //		$this->userView->file_put_contents('test.txt', $initialContents);
 //
