@@ -16,12 +16,6 @@ Feature: users cannot move (rename) a file to a blacklisted name
     And user "Alice" should see the following elements
       | /textfile0.txt |
 
-  Scenario: rename a file to a banned filename
-    When the administrator updates system config key "blacklisted_files" with value '["blacklisted-file.txt",".htaccess"]' and type "json" using the occ command
-    And user "Alice" moves file "/textfile0.txt" asynchronously to "/blacklisted-file.txt" using the WebDAV API
-    Then the HTTP status code should be "403"
-    And user "Alice" should see the following elements
-      | /textfile0.txt |
 
   @skipOnOcV10.3
   Scenario: rename a file to a filename that matches (or not) blacklisted_files_regex

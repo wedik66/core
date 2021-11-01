@@ -84,3 +84,20 @@ Feature: add and delete app configs using occ command
     When the administrator lists the config keys
     Then the command should have been successful
     And the system config key "installed" from the last command output should match value "true" of type "boolean"
+
+
+  Scenario: Check that search_min_length can be changed
+    Given using OCS API version "1"
+    When the administrator updates system config key "user.search_min_length" with value "4" using the occ command
+    Then the capabilities setting of "files_sharing" path "search_min_length" should be "4"
+
+
+  Scenario: set maximum size of previews
+    Given user "Alice" has been created with default attributes and without skeleton files
+    And user "Alice" has uploaded file "filesForUpload/lorem.txt" to "/parent.txt"
+    When the administrator updates system config key "preview_max_x" with value "null" using the occ command
+    And the administrator updates system config key "preview_max_y" with value "null" using the occ command
+    Then the HTTP status code should be "201"
+    When user "Alice" downloads the preview of "/parent.txt" with width "null" and height "null" using the WebDAV API
+    Then the HTTP status code should be "400"
+    And the value of the item "/d:error/s:exception" in the response about user "Alice" should be "Sabre\DAV\Exception\BadRequest"

@@ -38,26 +38,6 @@ Feature: admin general settings
     And the administrator logs out of the webUI
     Then the privacy policy url on the login page should link to "privacy_policy.html"
 
-  @smokeTest @skipOnDockerContainerTesting
-  Scenario: administrator sets update channel
-    Given the administrator has invoked occ command "config:app:set core OC_Channel --value git"
-    When the user reloads the current page of the webUI
-    And the administrator sets the value of update channel to "daily" using the webUI
-    Then the update channel should be "daily"
-
-  @smokeTest @skipOnFIREFOX @skipOnDockerContainerTesting
-  Scenario: administrator changes the cron job
-    Given the administrator has invoked occ command "config:app:set core backgroundjobs_mode --value ajax"
-    When the user reloads the current page of the webUI
-    And the administrator sets the value of cron job to "webcron" using the webUI
-    Then the background jobs mode should be "webcron"
-
-  @smokeTest @skipOnDockerContainerTesting
-  Scenario: administrator changes the log level
-    Given the administrator has invoked occ command "config:system:set loglevel --value 0"
-    When the user reloads the current page of the webUI
-    And the administrator sets the value of log level to 1 using the webUI
-    Then the log level should be "1"
 
   Scenario: administrator should be able to see system status
     Then the version of the owncloud installation should be displayed on the admin general settings page

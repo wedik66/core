@@ -10,21 +10,6 @@ Feature: users cannot move (rename) a file to or into an excluded directory
     And user "Alice" has uploaded file with content "ownCloud test text file 0" to "textfile0.txt"
     And the administrator has enabled async operations
 
-  Scenario: rename a file to an excluded directory name
-    When the administrator updates system config key "excluded_directories" with value '[".github"]' and type "json" using the occ command
-    And user "Alice" moves file "/textfile0.txt" asynchronously to "/.github" using the WebDAV API
-    Then the HTTP status code should be "403"
-    And user "Alice" should see the following elements
-      | /textfile0.txt |
-
-  Scenario: rename a file to an excluded directory name inside a parent directory
-    Given user "Alice" has created folder "FOLDER"
-    When the administrator updates system config key "excluded_directories" with value '[".github"]' and type "json" using the occ command
-    And user "Alice" moves file "/textfile0.txt" asynchronously to "/FOLDER/.github" using the WebDAV API
-    Then the HTTP status code should be "403"
-    And user "Alice" should see the following elements
-      | /textfile0.txt |
-
   @skipOnOcV10.3
   Scenario: rename a file to a filename that matches (or not) excluded_directories_regex
     Given user "Alice" has created folder "FOLDER"

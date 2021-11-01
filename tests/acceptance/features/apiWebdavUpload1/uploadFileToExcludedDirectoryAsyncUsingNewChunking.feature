@@ -11,28 +11,6 @@ Feature: users cannot upload a file to or into an excluded directory using new c
     And the owncloud log has been cleared
     And the administrator has enabled async operations
 
-  Scenario: Upload to an excluded directory name using new chunking and async MOVE
-    When the administrator updates system config key "excluded_directories" with value '[".github"]' and type "json" using the occ command
-    And user "Alice" creates a new chunking upload with id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "1" with "AAAAA" to id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "2" with "BBBBB" to id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "3" with "CCCCC" to id "chunking-42" using the WebDAV API
-    And user "Alice" moves new chunk file with id "chunking-42" asynchronously to "/.github" using the WebDAV API
-    Then the HTTP status code should be "403"
-    And as "Alice" file "/.github" should not exist
-
-  Scenario: Upload to an excluded directory name inside a parent directory using new chunking and async MOVE
-    Given user "Alice" has created folder "FOLDER"
-    When the administrator updates system config key "excluded_directories" with value '[".github"]' and type "json" using the occ command
-    And user "Alice" creates a new chunking upload with id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "1" with "AAAAA" to id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "2" with "BBBBB" to id "chunking-42" using the WebDAV API
-    And user "Alice" uploads new chunk file "3" with "CCCCC" to id "chunking-42" using the WebDAV API
-    And user "Alice" moves new chunk file with id "chunking-42" asynchronously to "/FOLDER/.github" using the WebDAV API
-    Then the HTTP status code should be "403"
-    And as "Alice" folder "/FOLDER" should exist
-    But as "Alice" file "/FOLDER/.github" should not exist
-
   @skipOnOcV10.3
   Scenario Outline: upload a file to a filename that matches excluded_directories_regex using new chunking and async MOVE
     # Note: we have to write JSON for the value, and to get a backslash in the double-quotes we have to escape it

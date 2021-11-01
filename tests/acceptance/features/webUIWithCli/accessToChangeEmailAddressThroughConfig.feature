@@ -8,6 +8,7 @@ Feature: Control access to edit email address of user through config file
     Given user "Alice" has been created with default attributes and without skeleton files
     And user "Alice" has logged in using the webUI
 
+
   Scenario: Admin gives access to users to change their email address
     When the administrator updates system config key "allow_user_to_change_mail_address" with value "true" and type "boolean" using the occ command
     And the user browses to the personal general settings page

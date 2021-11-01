@@ -8,6 +8,7 @@ Feature: Control access to edit fullname of user through config file
     Given user "Alice" has been created with default attributes and without skeleton files
     And user "Alice" has logged in using the webUI
 
+
   Scenario: Admin gives access to users to change their full name
     When the administrator updates system config key "allow_user_to_change_display_name" with value "true" and type "boolean" using the occ command
     And the user browses to the personal general settings page
@@ -16,6 +17,7 @@ Feature: Control access to edit fullname of user through config file
     Then "my#very&weird?नेपालि%name" should be shown as the name of the current user on the webUI
     And the attributes of user "Alice" returned by the API should include
       | displayname | my#very&weird?नेपालि%name |
+
 
   Scenario: Admin does not give access to users to change their full name
     When the administrator updates system config key "allow_user_to_change_display_name" with value "false" and type "boolean" using the occ command
