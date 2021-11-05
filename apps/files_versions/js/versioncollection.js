@@ -63,11 +63,12 @@
 					id: revision,
 					name: revision,
 					fullPath: fullPath,
-					timestamp: moment(new Date(version['{DAV:}getlastmodified'])).format('X'),
-					size: version['{DAV:}getcontentlength'],
-					mimetype: version['{DAV:}getcontenttype'],
+					timestamp: moment(new Date(version.getlastmodified)).format('X'),
+					relativeTimestamp:  moment(new Date(version.getlastmodified)).fromNow(),
+					size: version.getcontentlength,
+					mimetype: version.getcontenttype,
 					editedBy: version['meta-version-edited-by'],
-          editedByName: version['meta-version-edited-by-name'],
+          			editedByName: version['meta-version-edited-by-name'],
 					fileId: fileId
 				};
 			});

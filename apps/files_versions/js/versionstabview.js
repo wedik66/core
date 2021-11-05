@@ -39,7 +39,7 @@
 		'{{#hasDetails}}' +
 		'<div class="version-details">' +
 		'<span class="size has-tooltip" title="{{altSize}}">{{humanReadableSize}}</span>' +
-		'<span class="size has-tooltip" title="{{editedBy}}">{{editedByName}}</span>' +
+		'<span title="{{editedBy}}">{{editedByName}}</span>' +
 		'</div>' +
 		'{{/hasDetails}}' +
 		'</div>' +
